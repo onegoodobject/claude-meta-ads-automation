@@ -1,0 +1,19 @@
+name: Daily Meta Ads Report
+on:
+  schedule:
+    - cron: '30 3 * * *'  # 9:00 AM IST daily
+  workflow_dispatch:       # manual trigger too
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install requests
+      - run: python report.py
+        env:
+          META_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          META_ACCOUNT_ID: ${{ secrets.META_ACCOUNT_ID }}

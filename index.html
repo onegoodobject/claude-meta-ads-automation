@@ -406,15 +406,17 @@ async function loadData(init=false){
   if(!init)$('rfSp').style.display='inline-block';
   const acc=acId(ACCOUNT),t=TOKEN,dp=dparam(),tp=trendParam();
   const fields='spend,impressions,clicks,ctr,cpm,cpc,reach,frequency,actions,cost_per_action_type';
-  const filter=encodeURIComponent(JSON.stringify([{field:'effective_status',operator:'IN',value:['ACTIVE']}]));
   try{
-    const[sRes,cRes,tRes]=await Promise.all([
+    const[sRes,cRes,tRes,statusRes]=await Promise.all([
       apiFetch(`${BASE}/${acc}/insights?fields=${fields}&${dp}&access_token=${t}`),
-      apiFetch(`${BASE}/${acc}/insights?fields=campaign_name,${fields}&${dp}&level=campaign&limit=100&filtering=${filter}&access_token=${t}`),
-      apiFetch(`${BASE}/${acc}/insights?fields=${fields}&${tp}&time_increment=1&access_token=${t}`)
+      apiFetch(`${BASE}/${acc}/insights?fields=campaign_id,campaign_name,${fields}&${dp}&level=campaign&limit=100&access_token=${t}`),
+      apiFetch(`${BASE}/${acc}/insights?fields=${fields}&${tp}&time_increment=1&access_token=${t}`),
+      apiFetch(`${BASE}/${acc}/campaigns?fields=id,effective_status&limit=200&access_token=${t}`)
     ]);
+    // Build set of active campaign IDs
+    const activeCampIds=new Set((statusRes.data||[]).filter(c=>c.effective_status==='ACTIVE').map(c=>c.id));
     lastSum=parseR(sRes.data?.[0]||{});
-    lastCamps=(cRes.data||[]).map(parseR);
+    lastCamps=(cRes.data||[]).filter(c=>activeCampIds.has(c.campaign_id)).map(parseR);
     renderStats(lastSum);
     renderCamps(lastCamps);
     renderCharts(tRes.data||[]);

@@ -570,7 +570,7 @@ function renderStats(s){
 function ctrCls(v){return v>1.5?'cg':v>0.5?'cw':'cb';}
 function freqCls(v){return v>4?'cb':v>2.5?'cw':'';}
 function sum(arr,key){return arr.reduce((a,c)=>a+(parseFloat(c[key])||0),0);}
-function sumA(arr,key){return arr.reduce((a,c)=>a+(c[key]||0),0);}
+function sumA(arr,key){return arr.reduce((a,c)=>a+(Number(c[key])||0),0);}
 
 function renderCamps(camps){
   if(!camps.length){

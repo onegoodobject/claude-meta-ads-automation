@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>One Good Object — Meta Ads</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -58,38 +56,6 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .cd.emp,.cd.fut{opacity:.2;pointer-events:none}
 .cal-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:7px;min-height:15px}
 .cal-apply{width:100%;margin-top:8px;background:var(--orange);color:#08080f;border:none;border-radius:6px;padding:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Space Mono',monospace;display:none}
-
-/* ── LAUNCHER ── */
-#launcher{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.launcher-wrap{max-width:760px;width:100%;text-align:center}
-.launcher-title{font-family:'Space Mono',monospace;font-size:30px;font-weight:700;margin-bottom:8px}
-.launcher-sub{color:var(--muted);font-size:14px;margin-bottom:36px}
-.launcher-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;text-align:left}
-@media(max-width:600px){.launcher-grid{grid-template-columns:1fr}}
-.launch-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px 24px;cursor:pointer;transition:all .15s}
-.launch-card:hover{border-color:var(--ob);background:var(--od);transform:translateY(-2px)}
-.lc-icon{font-size:28px;margin-bottom:14px}
-.lc-title{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;margin-bottom:6px}
-.lc-sub{font-size:13px;color:var(--muted);line-height:1.5}
-
-/* ── PDF EDITOR ── */
-#pdfEnv{padding:24px 30px;max-width:1100px;margin:0 auto}
-.upload-zone{border:2px dashed var(--border);border-radius:14px;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;margin-top:8px;text-align:center}
-.upload-zone:hover{border-color:var(--ob);background:var(--od)}
-.upload-zone.drag{border-color:var(--orange);background:var(--od)}
-.upload-icon{font-size:40px;margin-bottom:14px}
-.upload-title{font-size:15px;font-weight:600;margin-bottom:6px}
-.upload-sub{font-size:13px;color:var(--muted)}
-.pdf-toolbar{display:flex;align-items:center;gap:14px;margin:16px 0;flex-wrap:wrap}
-.pdf-hint{font-size:12px;color:var(--muted);margin-left:auto}
-#pageIndicator{font-family:'Space Mono',monospace;font-size:13px;color:var(--text)}
-.pdf-stage{overflow-x:auto;display:flex;justify-content:center;padding:10px 0 40px}
-.pdf-page-wrap{position:relative;box-shadow:0 10px 40px rgba(0,0,0,.5);background:#fff;flex-shrink:0}
-.pdf-page-canvas{display:block}
-.pdf-text-layer{position:absolute;top:0;left:0}
-.pdf-text-run{position:absolute;display:inline-block;white-space:pre;color:transparent;cursor:text;border-radius:2px;transform-origin:left bottom}
-.pdf-text-run:hover{outline:1px dashed rgba(249,115,22,0.65)}
-.pdf-text-run.editing{outline:1px dashed var(--orange) !important;background:rgba(249,115,22,0.08);min-width:14px}
 
 /* ── TABS ── */
 .tabs{display:flex;gap:7px;margin-bottom:24px;flex-wrap:wrap}
@@ -173,29 +139,8 @@ tfoot tr td{border-top:1px solid var(--border);color:var(--orange);font-weight:7
 </head>
 <body>
 
-<!-- LAUNCHER -->
-<div id="launcher">
-  <div class="launcher-wrap">
-    <div class="badge">One Good Object</div>
-    <div class="launcher-title">Tools</div>
-    <div class="launcher-sub">Pick what you want to work on.</div>
-    <div class="launcher-grid">
-      <div class="launch-card" onclick="showEnv('dash')">
-        <div class="lc-icon">📊</div>
-        <div class="lc-title">Meta Ads Dashboard</div>
-        <div class="lc-sub">Live campaign performance, benchmarks, trends &amp; AI recommendations.</div>
-      </div>
-      <div class="launch-card" onclick="showEnv('pdfEnv')">
-        <div class="lc-icon">📄</div>
-        <div class="lc-title">PDF Editor</div>
-        <div class="lc-sub">Upload a PDF, click any line of text to edit it in place, then download the result.</div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- DASHBOARD -->
-<div id="dash" style="display:none">
+<div id="dash">
   <div class="topbar">
     <div>
       <div class="badge">One Good Object</div>
@@ -203,7 +148,6 @@ tfoot tr td{border-top:1px solid var(--border);color:var(--orange);font-weight:7
       <div class="tsub" id="lastFetched">—</div>
     </div>
     <div class="actions">
-      <button class="btn-g" onclick="showEnv('launcher')">← Back</button>
       <button class="btn-g" id="cmpBtn" onclick="toggleCompare()">⇄ Compare</button>
       <button class="btn-g" onclick="loadData()"><span id="rfSp" style="display:none" class="sp"></span>Refresh</button>
     </div>
@@ -363,39 +307,6 @@ tfoot tr td{border-top:1px solid var(--border);color:var(--orange);font-weight:7
       🔴 <strong>High Add to Cart but low Purchases</strong> — Checkout has friction. Check price, shipping cost, payment options.<br>
       🔴 <strong>Cost per Purchase above ₹1,500</strong> — Ads not efficient. Could be wrong audience, weak creative, or bad landing page.
     </div></div>
-  </div>
-</div>
-
-<!-- PDF EDITOR -->
-<div id="pdfEnv" style="display:none">
-  <div class="topbar">
-    <div>
-      <div class="badge">One Good Object</div>
-      <div class="ttitle mono">PDF Editor</div>
-      <div class="tsub" id="pdfStatus">Upload a PDF to begin</div>
-    </div>
-    <div class="actions">
-      <button class="btn-g" onclick="showEnv('launcher')">← Back</button>
-      <button class="btn-g" id="pdfNewBtn" onclick="resetPdf()" style="display:none">New File</button>
-      <button class="btn-o" id="pdfDownloadBtn" style="display:none" onclick="downloadEditedPdf()">⬇ DOWNLOAD EDITED PDF</button>
-    </div>
-  </div>
-
-  <div id="pdfUploadZone" class="upload-zone" onclick="$('pdfFileInput').click()">
-    <input type="file" id="pdfFileInput" accept="application/pdf" style="display:none"/>
-    <div class="upload-icon">📄</div>
-    <div class="upload-title">Drop a PDF here, or click to upload</div>
-    <div class="upload-sub">Once it loads, click any line of text in the document to edit it directly.</div>
-  </div>
-
-  <div id="pdfViewerWrap" style="display:none">
-    <div class="pdf-toolbar">
-      <button class="btn-g" onclick="prevPage()">‹ Prev</button>
-      <span id="pageIndicator">Page 1 / 1</span>
-      <button class="btn-g" onclick="nextPage()">Next ›</button>
-      <span class="pdf-hint">💡 Click any line of text to edit it. Click elsewhere (or press Enter) to confirm.</span>
-    </div>
-    <div id="pdfStage" class="pdf-stage"></div>
   </div>
 </div>
 
@@ -832,265 +743,8 @@ function sw(name,el){
   el.classList.add('active');
 }
 
-// ════════════════════════════════════════════════════════════
-// PDF EDITOR
-// ════════════════════════════════════════════════════════════
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-let pdfDocRef=null;
-let pdfPages=[];     // {pageNum, canvas, wrap, baseW, baseH}
-let pdfCurPage=1;
-let pdfFileName='';
-
-function pdfSetStatus(msg){ const el=$('pdfStatus'); if(el) el.textContent=msg; }
-
-$('pdfUploadZone') && $('pdfUploadZone').addEventListener('dragover',e=>{e.preventDefault();$('pdfUploadZone').classList.add('drag');});
-$('pdfUploadZone') && $('pdfUploadZone').addEventListener('dragleave',()=>$('pdfUploadZone').classList.remove('drag'));
-$('pdfUploadZone') && $('pdfUploadZone').addEventListener('drop',e=>{
-  e.preventDefault();$('pdfUploadZone').classList.remove('drag');
-  const f=e.dataTransfer.files&&e.dataTransfer.files[0];
-  if(f) loadPdfFile(f);
-});
-$('pdfFileInput') && $('pdfFileInput').addEventListener('change',e=>{
-  const f=e.target.files&&e.target.files[0];
-  if(f) loadPdfFile(f);
-});
-
-async function loadPdfFile(file){
-  if(file.type!=='application/pdf' && !file.name.toLowerCase().endsWith('.pdf')){
-    alert('Please upload a .pdf file.');return;
-  }
-  pdfFileName=file.name;
-  pdfSetStatus('⏳ Rendering PDF…');
-  try{
-    const buf=await file.arrayBuffer();
-    pdfDocRef=await pdfjsLib.getDocument({data:buf}).promise;
-    if(pdfDocRef.numPages>60){
-      if(!confirm(`This PDF has ${pdfDocRef.numPages} pages. Rendering all of them in-browser may be slow. Continue?`)) { pdfSetStatus('Upload a PDF to begin'); return; }
-    }
-    pdfPages=[];
-    $('pdfStage').innerHTML='';
-    for(let i=1;i<=pdfDocRef.numPages;i++){
-      const page=await pdfDocRef.getPage(i);
-      const baseViewport=page.getViewport({scale:1});
-      const targetWidth=Math.min(900, baseViewport.width*1.6);
-      const scale=targetWidth/baseViewport.width;
-      const viewport=page.getViewport({scale});
-
-      const wrap=document.createElement('div');
-      wrap.className='pdf-page-wrap';
-      wrap.style.width=viewport.width+'px';
-      wrap.style.height=viewport.height+'px';
-      wrap.style.display=(i===1)?'block':'none';
-
-      const canvas=document.createElement('canvas');
-      canvas.className='pdf-page-canvas';
-      canvas.width=viewport.width; canvas.height=viewport.height;
-
-      const tlayer=document.createElement('div');
-      tlayer.className='pdf-text-layer';
-      tlayer.style.width=viewport.width+'px';
-      tlayer.style.height=viewport.height+'px';
-
-      wrap.appendChild(canvas); wrap.appendChild(tlayer);
-      $('pdfStage').appendChild(wrap);
-
-      const ctx=canvas.getContext('2d');
-      await page.render({canvasContext:ctx, viewport}).promise;
-      const textContent=await page.getTextContent();
-      buildPdfTextLayer(tlayer, canvas, textContent, viewport);
-
-      pdfPages.push({pageNum:i, canvas, wrap, baseW:baseViewport.width, baseH:baseViewport.height});
-    }
-    pdfCurPage=1;
-    pdfUpdatePageIndicator();
-    $('pdfUploadZone').style.display='none';
-    $('pdfViewerWrap').style.display='block';
-    $('pdfDownloadBtn').style.display='inline-block';
-    $('pdfNewBtn').style.display='inline-block';
-    pdfSetStatus(`Editing: ${pdfFileName}`);
-  }catch(e){
-    console.error(e);
-    alert('Could not open this PDF: '+e.message+'\n(Password-protected or corrupted files are not supported.)');
-    pdfSetStatus('Upload a PDF to begin');
-  }
-}
-
-function buildPdfTextLayer(tlayer, canvas, textContent, viewport){
-  const ctx=canvas.getContext('2d');
-  textContent.items.forEach(item=>{
-    if(!item.str || !item.str.trim()) return;
-    const style=textContent.styles[item.fontName]||{};
-    const tx=pdfjsLib.Util.transform(viewport.transform, item.transform);
-    const angleRad=Math.atan2(tx[1], tx[0]);
-    const fontHeight=Math.hypot(tx[2], tx[3]) || 10;
-    const left=tx[4];
-    const top=tx[5]-fontHeight;
-    const approxWidth=(item.width||0)*Math.hypot(viewport.transform[0],viewport.transform[1]);
-
-    const famRaw=(style.fontFamily||'sans-serif').toLowerCase();
-    const nameHint=(item.fontName||'').toLowerCase();
-    const isBold=nameHint.includes('bold')||famRaw.includes('bold');
-    const isItalic=nameHint.includes('italic')||nameHint.includes('oblique')||famRaw.includes('italic');
-    let family;
-    if(famRaw.includes('monospace')) family="'Courier New',monospace";
-    else if(famRaw.includes('serif')&&!famRaw.includes('sans')) family="Georgia,'Times New Roman',serif";
-    else family="'Helvetica Neue',Arial,sans-serif";
-
-    const div=document.createElement('div');
-    div.className='pdf-text-run';
-    div.textContent=item.str;
-    div.dataset.orig=item.str;
-    div.style.left=left+'px';
-    div.style.top=top+'px';
-    div.style.minWidth=Math.max(approxWidth,4)+'px';
-    div.style.height=fontHeight+'px';
-    div.style.lineHeight=fontHeight+'px';
-    div.style.fontSize=fontHeight+'px';
-    div.style.fontFamily=family;
-    div.style.fontWeight=isBold?'700':'400';
-    div.style.fontStyle=isItalic?'italic':'normal';
-    if(angleRad) div.style.transform=`rotate(${angleRad}rad)`;
-    div._meta={tx,fontHeight,family,isBold,isItalic,angleRad,boxLeft:left,boxTop:top,boxW:Math.max(approxWidth,4)};
-    div.addEventListener('click',ev=>{ev.stopPropagation();pdfBeginEdit(div,ctx);});
-    tlayer.appendChild(div);
-  });
-}
-
-function pdfSampleColors(ctx,x,y,w,h){
-  x=Math.max(0,Math.round(x)); y=Math.max(0,Math.round(y));
-  w=Math.max(4,Math.round(w)); h=Math.max(4,Math.round(h));
-  w=Math.min(w, ctx.canvas.width-x); h=Math.min(h, ctx.canvas.height-y);
-  if(w<=0||h<=0) return {bg:'rgb(255,255,255)',fg:'rgb(0,0,0)'};
-  let data;
-  try{ data=ctx.getImageData(x,y,w,h).data; }catch(e){ return {bg:'rgb(255,255,255)',fg:'rgb(0,0,0)'}; }
-  const corners=[[0,0],[w-1,0],[0,h-1],[w-1,h-1]];
-  let bgR=0,bgG=0,bgB=0;
-  corners.forEach(([cx,cy])=>{ const i=(cy*w+cx)*4; bgR+=data[i];bgG+=data[i+1];bgB+=data[i+2]; });
-  bgR=Math.round(bgR/4);bgG=Math.round(bgG/4);bgB=Math.round(bgB/4);
-  let darkest=1000,darkRGB=[0,0,0];
-  for(let i=0;i<data.length;i+=4){
-    const sum=data[i]+data[i+1]+data[i+2];
-    if(sum<darkest){darkest=sum;darkRGB=[data[i],data[i+1],data[i+2]];}
-  }
-  return {bg:`rgb(${bgR},${bgG},${bgB})`, fg:`rgb(${darkRGB[0]},${darkRGB[1]},${darkRGB[2]})`};
-}
-
-function pdfBeginEdit(div,ctx){
-  if(div.classList.contains('editing')) return;
-  document.querySelectorAll('.pdf-text-run.editing').forEach(d=>pdfFinishEdit(d));
-  const m=div._meta;
-  const {bg,fg}=pdfSampleColors(ctx, m.boxLeft, m.boxTop, m.boxW, m.fontHeight*1.15);
-  m.bg=bg; m.fg=fg;
-  ctx.save();
-  ctx.fillStyle=bg;
-  ctx.fillRect(m.boxLeft-1, m.boxTop-1, m.boxW+4, m.fontHeight*1.2+2);
-  ctx.restore();
-  div.classList.add('editing');
-  div.contentEditable='true';
-  div.style.color=fg;
-  div.focus();
-  const range=document.createRange(); range.selectNodeContents(div);
-  const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-  div.addEventListener('keydown', pdfEditKeydown);
-  div.addEventListener('blur', ()=>pdfFinishEdit(div), {once:true});
-}
-function pdfEditKeydown(e){
-  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); e.target.blur(); }
-  if(e.key==='Escape'){ e.target.textContent=e.target.dataset.orig; e.target.blur(); }
-}
-function pdfFinishEdit(div){
-  if(!div.classList.contains('editing')) return;
-  div.classList.remove('editing');
-  div.contentEditable='false';
-  div.removeEventListener('keydown', pdfEditKeydown);
-  const wrap=div.closest('.pdf-page-wrap');
-  const ctx=wrap.querySelector('canvas').getContext('2d');
-  const m=div._meta;
-  const text=div.textContent;
-  ctx.save();
-  let fontStr='';
-  if(m.isItalic) fontStr+='italic ';
-  if(m.isBold) fontStr+='bold ';
-  fontStr+=`${m.fontHeight}px ${m.family}`;
-  ctx.font=fontStr;
-  ctx.fillStyle=m.fg;
-  ctx.textBaseline='alphabetic';
-  if(m.angleRad){
-    ctx.translate(m.tx[4], m.tx[5]);
-    ctx.rotate(m.angleRad);
-    ctx.fillText(text,0,0);
-  } else {
-    ctx.fillText(text, m.tx[4], m.tx[5]);
-  }
-  ctx.restore();
-  div.dataset.orig=text;
-  div.style.color='transparent';
-}
-
-function pdfUpdatePageIndicator(){ $('pageIndicator').textContent=`Page ${pdfCurPage} / ${pdfPages.length}`; }
-function pdfGoto(n){
-  if(n<1||n>pdfPages.length) return;
-  pdfPages[pdfCurPage-1].wrap.style.display='none';
-  pdfCurPage=n;
-  pdfPages[pdfCurPage-1].wrap.style.display='block';
-  pdfUpdatePageIndicator();
-}
-function prevPage(){ pdfGoto(pdfCurPage-1); }
-function nextPage(){ pdfGoto(pdfCurPage+1); }
-
-function resetPdf(){
-  pdfDocRef=null; pdfPages=[]; pdfCurPage=1; pdfFileName='';
-  $('pdfStage').innerHTML='';
-  $('pdfViewerWrap').style.display='none';
-  $('pdfUploadZone').style.display='flex';
-  $('pdfDownloadBtn').style.display='none';
-  $('pdfNewBtn').style.display='none';
-  $('pdfFileInput').value='';
-  pdfSetStatus('Upload a PDF to begin');
-}
-
-async function downloadEditedPdf(){
-  if(!pdfPages.length) return;
-  const btn=$('pdfDownloadBtn');
-  document.querySelectorAll('.pdf-text-run.editing').forEach(d=>pdfFinishEdit(d));
-  btn.disabled=true; btn.innerHTML='<span class="sp"></span>BUILDING PDF...';
-  try{
-    const {PDFDocument}=PDFLib;
-    const outDoc=await PDFDocument.create();
-    for(const p of pdfPages){
-      const dataUrl=p.canvas.toDataURL('image/jpeg',0.92);
-      const imgBytes=await fetch(dataUrl).then(r=>r.arrayBuffer());
-      const img=await outDoc.embedJpg(imgBytes);
-      const pageOut=outDoc.addPage([p.baseW, p.baseH]);
-      pageOut.drawImage(img,{x:0,y:0,width:p.baseW,height:p.baseH});
-    }
-    const bytes=await outDoc.save();
-    const blob=new Blob([bytes],{type:'application/pdf'});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download=(pdfFileName?pdfFileName.replace(/\.pdf$/i,''):'document')+'-edited.pdf';
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-  }catch(e){
-    console.error(e);
-    alert('Could not build the PDF: '+e.message);
-  }
-  btn.disabled=false; btn.innerHTML='⬇ DOWNLOAD EDITED PDF';
-}
-
-// ── ENVIRONMENT SWITCHER ──
-let dashLoaded=false;
-function showEnv(name){
-  document.getElementById('launcher').style.display = name==='launcher' ? 'flex' : 'none';
-  document.getElementById('dash').style.display = name==='dash' ? 'block' : 'none';
-  document.getElementById('pdfEnv').style.display = name==='pdfEnv' ? 'block' : 'none';
-  if(name==='dash' && !dashLoaded){ dashLoaded=true; loadData(); }
-}
-
 // ── AUTO LOAD ──
-window.onload=()=>{ showEnv('launcher'); };
+window.onload=()=>{ loadData(); };
 </script>
 </body>
 </html>
